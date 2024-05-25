@@ -3,7 +3,7 @@
 (provide entry eval-exp evaluate cross-over make-gen mutation entry size eval-exp seed)
 (require "input.rkt" "mutation.rkt" "operators.rkt")
 (define entry (read-file "functions/f5.txt"))
-(define size 175)
+(define size 75)
 
 
 (define (match fun x y)
