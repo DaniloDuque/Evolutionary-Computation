@@ -3,7 +3,7 @@
 (provide entry eval-exp evaluate cross-over make-gen mutation entry size eval-exp seed)
 (require "input.rkt" "mutation.rkt" "operators.rkt")
 (define entry (read-file "functions/f5.txt"))
-(define size 75)
+(define size 5)
 
 
 (define (match fun x y)
@@ -81,7 +81,7 @@
 
     (let* ((subtree1 (select-subtree f)) (subtree2 (select-subtree g)) (new-tree (combine-trees subtree1 subtree2)))
         (cond
-            ((> (random 100) 17) (evaluate new-tree))
+            ((> (random 100) 95) (evaluate new-tree))
             (else (evaluate (mutation new-tree)))
         )
     )
