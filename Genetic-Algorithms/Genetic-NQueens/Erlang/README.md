@@ -16,7 +16,7 @@ The N-Queens problem involves placing N queens on an N×N chessboard such that n
 1. Compile the Erlang source files:
 
    ```sh
-   erlc code/erlc *.erl
+   erlc *.erl
    ```
 
 2. Start the Erlang shell:
