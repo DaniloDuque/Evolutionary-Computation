@@ -31,9 +31,9 @@ The N-Queens problem involves placing N queens on an N×N chessboard such that n
    1> nqueens:genetic_nqueens().
    ```
 
-## Migration Logic
+## Parameters
 
-Every specified number of generations, the best individuals from each island are sent to other islands, ensuring genetic diversity and enhancing the algorithm's ability to find optimal solutions.
+To change the board size, number of threads, migration intervals, and more, modify the macros at the top of nqueens.erl.
 
 ## License
 
