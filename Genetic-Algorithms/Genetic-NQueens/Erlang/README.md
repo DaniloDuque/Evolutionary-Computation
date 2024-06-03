@@ -1,4 +1,3 @@
-```markdown
 # N-Queens Genetic Algorithm with Island Model
 
 This project solves the N-Queens problem using a genetic algorithm with an island model. Each island is represented by an independent process (thread) with its own population. Periodically, the top individuals from each population migrate to another island, enhancing genetic diversity and improving the overall solution.
@@ -39,4 +38,3 @@ Every specified number of generations, the best individuals from each island are
 ## License
 
 This project is licensed under the MIT License.
-```
