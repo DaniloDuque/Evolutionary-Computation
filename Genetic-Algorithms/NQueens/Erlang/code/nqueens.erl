@@ -14,22 +14,8 @@ boardSize() -> ?BOARD_SIZE.
 mutationProb() -> ?MUTATION_PROB.
 
 
-rand(Min, Max) -> rand:uniform() * (Max - Min + 1) + Min - 1.
 
-sum(Gen) -> lists:foldl(fun({_, X}, Acc) -> X + Acc end, 0, Gen).
-
-reproduce(Gen) -> S = sum(Gen), util:elitism(Gen++lists:map(fun(_) -> util:cross_over(get_parent(rand(0, S), Gen), get_parent(rand(0, S), Gen)) end, lists:seq(1, ?BOARD_SIZE)), ?GEN_SIZE).
-
-
-get_parent(R, Gen) -> tournament(R, Gen, 0).
-tournament(_, [H | []], _) -> H;
-tournament(R, [{E, F} | _], S) when S + F > R -> {E, F};
-tournament(R, [_ | T], S) -> tournament(R, T, S).
-
-
-make_gen() -> [util:seed() || _ <- lists:seq(1, ?GEN_SIZE)].
-
-genetic_nqueens() -> start_threads(0, [make_gen() || _ <- lists:seq(1, ?NUM_THREADS)]).
+genetic_nqueens() -> start_threads(0, [util:make_gen() || _ <- lists:seq(1, ?NUM_THREADS)]).
 
 start_threads(I, Ps) -> CID = spawn_link(fun() -> center(I) end), [spawn_link(fun() -> evolve(P, 0, CID) end) || P <- Ps].
 
@@ -48,7 +34,7 @@ receive_all(?NUM_THREADS) -> [];
 receive_all(I) -> receive Gen -> [Gen|receive_all(I+1)] end.
 
 evolve(Gen, ?MIGRATION_INTERVAL, CID) -> CID ! Gen;
-evolve(Gen, I, CID) -> evolve(reproduce(Gen), I+1, CID).
+evolve(Gen, I, CID) -> evolve(util:reproduce(Gen), I+1, CID).
 
 migrate(Pops) -> [P++T || P <- Pops, T <- [lists:sublist(Pop, ?MIGRATION_SIZE) || Pop <- util:shuffle(list_to_tuple(Pops), length(Pops))]].
 

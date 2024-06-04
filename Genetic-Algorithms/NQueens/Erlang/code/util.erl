@@ -1,5 +1,5 @@
 -module(util).
--export([shuffle/2, elitism/2, show_board/1, cross_over/2, seed/0]).
+-export([make_gen/0, reproduce/1, shuffle/2, elitism/2, show_board/1, cross_over/2, seed/0]).
 
 
 shuffle(L) -> shuffle(list_to_tuple(L), nqueens:boardSize()).
@@ -58,5 +58,19 @@ sort(Gen) -> lists:sort(fun({_, F1}, {_, F2}) -> F1 > F2 end, Gen).
 
 elitism(Gen, N) -> lists:sublist(sort(Gen), N).
 
+
+rand(Min, Max) -> rand:uniform() * (Max - Min + 1) + Min - 1.
+
+sum(Gen) -> lists:foldl(fun({_, X}, Acc) -> X + Acc end, 0, Gen).
+
+reproduce(Gen) -> S = sum(Gen), util:elitism(Gen++lists:map(fun(_) -> util:cross_over(get_parent(rand(0, S), Gen), get_parent(rand(0, S), Gen)) end, lists:seq(1, nqueens:boardSize())), nqueens:genSize()).
+
+
+get_parent(R, Gen) -> tournament(R, Gen, 0).
+tournament(_, [H | []], _) -> H;
+tournament(R, [{E, F} | _], S) when S + F > R -> {E, F};
+tournament(R, [_ | T], S) -> tournament(R, T, S).
+
+make_gen() -> [util:seed() || _ <- lists:seq(1, nqueens:genSize())].
 
 
