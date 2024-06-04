@@ -44,7 +44,7 @@ show_board([{Board, Fitness}]) ->
         end, lists:seq(1, Size)),
         io:format("~n", [])
     end, lists:seq(1, Size)),
-    io:format("fitness: ~p~n", [Fitness]).
+    io:format("Collisions: ~p~n", [math:sqrt(1/Fitness + 2) - 2]).
 
 print(Board, I, J) -> print_h(lists:nth(J, Board), I, J).
 print_h(Q, I, _) when Q =:= I -> "👑";
