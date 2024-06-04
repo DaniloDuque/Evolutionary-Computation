@@ -1,4 +1,3 @@
-```markdown
 # N-Queens Genetic Algorithm with Island Model
 
 This project solves the N-Queens problem using a genetic algorithm with an island model. Each island is represented by an independent process (thread) with its own population. Periodically, the top individuals from each population migrate to another island, enhancing genetic diversity and improving the overall solution.
@@ -17,7 +16,7 @@ The N-Queens problem involves placing N queens on an N×N chessboard such that n
 1. Compile the Erlang source files:
 
    ```sh
-   erlc code/erlc *.erl
+   erlc *.erl
    ```
 
 2. Start the Erlang shell:
@@ -31,12 +30,10 @@ The N-Queens problem involves placing N queens on an N×N chessboard such that n
    ```erlang
    1> nqueens:genetic_nqueens().
    ```
+## Parameters
 
-## Migration Logic
-
-Every specified number of generations, the best individuals from each island are sent to other islands, ensuring genetic diversity and enhancing the algorithm's ability to find optimal solutions.
+To change the board size, number of threads, migration intervals, and more, modify the macros at the top of nqueens.erl.
 
 ## License
 
 This project is licensed under the MIT License.
-```
