@@ -5,10 +5,9 @@
 shuffle(L) -> shuffle(list_to_tuple(L), nqueens:boardSize()).
 
 shuffle(T, 0)-> tuple_to_list(T);
-shuffle(T, Len)-> Rand = rand:uniform(Len), A = element(Len, T), B = element(Rand, T),
-                  T1 = setelement(Len, T,  B), T2 = setelement(Rand,  T1, A), shuffle(T2, Len - 1).
+shuffle(T, Len)-> Rand = rand:uniform(Len), A = element(Len, T), B = element(Rand, T), T1 = setelement(Len, T,  B), T2 = setelement(Rand,  T1, A), shuffle(T2, Len - 1).
 
-seed() -> E = shuffle(lists:seq(0, nqueens:boardSize() - 1)), {E, fitness(E)}.
+seed() -> E = shuffle(lists:seq(0, nqueens:boardSize()-1)), {E, fitness(E)}.
 
 
 
@@ -26,8 +25,10 @@ swap([X|T], X, Y) -> [Y|swap(T, X, Y)];
 swap([Y|T], X, Y) -> [X|swap(T, X, Y)];
 swap([H|T], X, Y) -> [H|swap(T, X, Y)].
 
+
 mutation(E, R) when R < 5 -> E;
 mutation(E, _) -> L = nqueens:boardSize(), swap(E, lists:nth(rand:uniform(L), E), lists:nth(rand:uniform(L), E)).
+
 
 cross_over({P1, _}, {P2, _}) ->
     F = lists:sublist(P1, rand:uniform(nqueens:boardSize())),
@@ -43,8 +44,10 @@ show_board([{Board, Fitness}]) ->
             io:format("~ts", [print(Board, I, J)])
         end, lists:seq(1, Size)),
         io:format("~n", [])
-    end, lists:seq(1, Size)),
+    end, lists:seq(0, Size-1)),
     io:format("Collisions: ~p~n", [math:sqrt(1/Fitness + 2) - 2]).
+
+
 
 print(Board, I, J) -> print_h(lists:nth(J, Board), I, J).
 print_h(Q, I, _) when Q =:= I -> "👑";
@@ -55,16 +58,13 @@ print_h(_, _, _) -> "⬜".
 
 sort(Gen) -> lists:sort(fun({_, F1}, {_, F2}) -> F1 > F2 end, Gen).
 
-
 elitism(Gen, N) -> lists:sublist(sort(Gen), N).
-
 
 rand(Min, Max) -> rand:uniform() * (Max - Min + 1) + Min - 1.
 
 sum(Gen) -> lists:foldl(fun({_, X}, Acc) -> X + Acc end, 0, Gen).
 
 reproduce(Gen) -> S = sum(Gen), util:elitism(Gen++lists:map(fun(_) -> util:cross_over(get_parent(rand(0, S), Gen), get_parent(rand(0, S), Gen)) end, lists:seq(1, nqueens:boardSize())), nqueens:genSize()).
-
 
 get_parent(R, Gen) -> tournament(R, Gen, 0).
 tournament(_, [H | []], _) -> H;
