@@ -1,16 +1,14 @@
 -module(nqueens).
--export([genetic_nqueens/0, genSize/0, boardSize/0, mutationProb/0]).
+-export([genetic_nqueens/0, genSize/0, boardSize/0]).
 
 
 -define(MIGRATION_SIZE, 10).
--define(MIGRATION_INTERVAL, 1500).
--define(NUM_THREADS, 2).
+-define(MIGRATION_INTERVAL, 1000).
+-define(NUM_THREADS, 6).
 -define(GEN_SIZE, 100).
--define(BOARD_SIZE, 10).
--define(MUTATION_PROB, 0.05).
+-define(BOARD_SIZE, 100).
 genSize() -> ?GEN_SIZE.
 boardSize() -> ?BOARD_SIZE.
-mutationProb() -> ?MUTATION_PROB.
 
 
 genetic_nqueens() -> start_threads(spawn_link(fun() -> center() end), [util:make_gen() || _ <- lists:seq(1, ?NUM_THREADS)]).
@@ -29,7 +27,7 @@ center() ->
 
 receive_all() -> receive_all(0).
 receive_all(?NUM_THREADS) -> [];
-receive_all(I) -> receive {Thr, Gen} -> [{Thr, Gen}|receive_all(I+1)] end.
+receive_all(I) -> receive {Thr, Gen} -> [{Thr, Gen} | receive_all(I+1)] end.
 
 evolve(Gen, ?MIGRATION_INTERVAL, CID) -> CID ! {self(), Gen}, receive P -> evolve(P, 0, CID) end;
 evolve(Gen, I, CID) -> evolve(util:reproduce(Gen), I+1, CID).

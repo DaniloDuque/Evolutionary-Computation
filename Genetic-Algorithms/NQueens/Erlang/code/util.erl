@@ -26,13 +26,14 @@ swap([Y|T], X, Y) -> [X|swap(T, X, Y)];
 swap([H|T], X, Y) -> [H|swap(T, X, Y)].
 
 
-mutation(E, R) when R < 5 -> E;
+%mutation probability is 5%
+mutation(E, R) when R < 0.05 -> E;
 mutation(E, _) -> L = nqueens:boardSize(), swap(E, lists:nth(rand:uniform(L), E), lists:nth(rand:uniform(L), E)).
 
 
 cross_over({P1, _}, {P2, _}) ->
     F = lists:sublist(P1, rand:uniform(nqueens:boardSize())),
-    R = mutation(lists:sublist(F++lists:filter(fun(X) -> not lists:member(X, F) end, P2), nqueens:boardSize()), rand:uniform(100)),
+    R = mutation(lists:sublist(F++lists:filter(fun(X) -> not lists:member(X, F) end, P2), nqueens:boardSize()), rand:uniform()),
     {R, fitness(R)}.
    
 
