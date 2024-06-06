@@ -3,26 +3,26 @@
 
 
 -define(MIGRATION_SIZE, 10).
--define(MIGRATION_INTERVAL, 1000).
+-define(MIGRATION_INTERVAL, 1500).
 -define(NUM_THREADS, 3).
 -define(GEN_SIZE, 100).
--define(BOARD_SIZE, 25).
+-define(BOARD_SIZE, 100).
 -define(MUTATION_PROB, 0.05).
 genSize() -> ?GEN_SIZE.
 boardSize() -> ?BOARD_SIZE.
 mutationProb() -> ?MUTATION_PROB.
 
 
-genetic_nqueens() -> start_threads(0, [util:make_gen() || _ <- lists:seq(1, ?NUM_THREADS)]).
+genetic_nqueens() -> start_threads([util:make_gen() || _ <- lists:seq(1, ?NUM_THREADS)]).
 
-start_threads(I, Ps) -> CID = spawn_link(fun() -> center(I) end), [spawn_link(fun() -> evolve(P, 0, CID) end) || P <- Ps].
-
+start_threads(Ps) -> CID = spawn_link(fun() -> center(0) end), [spawn_link(fun() -> evolve(P, 0, CID) end) || P <- Ps].
+start_threads(CID, Ps) -> [spawn_link(fun() -> evolve(P, 0, CID) end) || P <- Ps].
 
 center(I) ->
     P = receive_all(), [{E, F}] = util:elitism([H || [H|_] <- P], 1),
     if 
         F == 0.5 -> util:show_board([{E, F}]);
-        true -> start_threads(I + 1, migrate(P))
+        true -> start_threads(self(), migrate(P)), center(I+1)
     end.
 
 
