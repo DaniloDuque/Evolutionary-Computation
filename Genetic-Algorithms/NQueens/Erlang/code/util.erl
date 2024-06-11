@@ -10,7 +10,6 @@ shuffle(T, Len)-> Rand = rand:uniform(Len), A = element(Len, T), B = element(Ran
 seed() -> E = shuffle(lists:seq(0, nqueens:boardSize()-1)), {E, fitness(E)}.
 
 
-
 fitness(B) -> F = fitness(B, 0, nqueens:boardSize()-1), 1/(F * F + 2).
 fitness(_, L, L) -> 0;
 fitness([H|T], I, L) -> collisions(H, I, T, I+1) + fitness(T, I+1, L).
@@ -51,7 +50,7 @@ show_board([{Board, Fitness}]) ->
 
 
 print(Board, I, J) -> print_h(lists:nth(J, Board), I, J).
-print_h(Q, I, _) when Q =:= I -> "👑";
+print_h(Q, I, _) when Q == I -> "👑";
 print_h(_, I, J) when (I+J) rem 2 == 1 -> "⬛";
 print_h(_, _, _) -> "⬜".
     
