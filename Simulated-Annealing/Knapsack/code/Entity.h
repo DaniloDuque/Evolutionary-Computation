@@ -27,8 +27,8 @@ private:
             }
 
         energy *= (Space >= 0);
-    }
 
+    }
 
     void Energy(int Space, int *costs, int *weights){
         for(int i = 0; i<SIZE && Space > 0; ++i)
@@ -38,24 +38,16 @@ private:
             }
 
         energy *= (Space >= 0);
-        
+
     }
 
     void Perturb(){
         vector<int> on, off;
         for(int i = 0; i<SIZE; ++i) (Knapsack.test(i)? on.push_back(i) : off.push_back(i));
-        Knapsack.reset(on[dist(gen)%on.size()]);
-        Knapsack.set(off[dist(gen)%off.size()]);
-
+        if(on.size()) Knapsack.reset(on[dist(gen)%on.size()]);
+        Knapsack.set(off[dist(gen)%(int)off.size()]);
+        
     }
-
-
-
-
-
-
-
-
 
 public:
 
@@ -72,12 +64,12 @@ public:
         this->Knapsack = curr->Knapsack;
         Perturb();
         Energy(curr->Space, costs, weights);
-
     }
 
     void showSolution(){
 
-        
+        for(int i = 0; i<SIZE; ++i) if(Knapsack.test(i)) printf("%d ", i);
+        printf("Energy: %lf\n", energy);
 
     }
 };
