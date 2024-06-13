@@ -1,19 +1,15 @@
 #include "Entity.h"
+#include <cstdlib>
 
-#define cool_rate 0.9999
-#define T_max 1000.0
-#define T_min 1.0
+#define cool_rate 0.99
+#define T_max 100.0
+#define T_min 0.0001
 
 
 int SIZE, weights[MAX], values[MAX], Space;
 
-
-double randP(){
-    return (double)rand() / RAND_MAX;
-}
-
 bool accept(double T, double delta){
-    return delta < 0 || randP() < exp(-delta/T);
+    return delta < 0 || (double)rand()/RAND_MAX < exp(-delta/T);
 }
 
 Entity Simulated_Annealing(){
@@ -21,7 +17,7 @@ Entity Simulated_Annealing(){
     Entity curr = Entity(SIZE, weights, values, Space);
     for(double T = T_max;T > T_min; T *= cool_rate){
         Entity New = Entity(values, weights, curr);
-        if(accept(T, curr.energy - New.energy)) curr = New;
+        if(New.energy != 0 && accept(T, curr.energy - New.energy)) curr = New;
 
     }return curr;
 

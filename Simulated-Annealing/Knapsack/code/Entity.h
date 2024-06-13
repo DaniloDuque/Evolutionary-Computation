@@ -2,9 +2,8 @@
 #define ENTITY_H
 
 #include <bits/stdc++.h>
-#include <cstdlib>
 using namespace std;
-#define MAX 10000
+#define MAX 1000000
 
 
 class Entity {
@@ -30,10 +29,10 @@ private:
         shuffle(arr, SIZE);
         for(int i = 0; i<SIZE && Space > 0; ++i){
             Space -= weights[arr[i]];
-            energy += values[arr[i]];
+            this->energy += values[arr[i]];
             Knapsack.set(i);
         }
-        energy *= (Space >= 0);
+        this->energy = (Space >= 0)? this->energy : 0.0;
 
     }
 
@@ -41,10 +40,10 @@ private:
         for(int i = 0; i<SIZE && Space > 0; ++i)
             if(Knapsack.test(i)){
                 Space -= weights[i];
-                energy += values[i];
+                this->energy += values[i];
             }
 
-        energy *= (Space >= 0);
+        this->energy = (Space >= 0)? this->energy : 0.0;
     }
 
     void Perturb(){
@@ -81,7 +80,7 @@ public:
                 value += values[i];
                 weight += weights[i];
             } 
-        printf("\nKnapsack value: %d\nKnapsack weight: %d\n", value, weight);
+        printf("\nKnapsack value: %d\nKnapsack weight: %d\nthis->energy: %lf\n", value, weight, this->energy);
         
     }
 
