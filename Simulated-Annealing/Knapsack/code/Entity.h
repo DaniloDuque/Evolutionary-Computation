@@ -2,7 +2,6 @@
 #define ENTITY_H
 
 #include <bits/stdc++.h>
-#include <random>
 using namespace std;
 #define MAX 10000
 
@@ -16,13 +15,13 @@ private:
     bitset<MAX> Knapsack;
     uniform_int_distribution<int> dist;    
 
-    void seed(int Space, int *costs, int *weights){
+    void seed(int Space, int *values, int *weights){
         int arr[SIZE]; iota(arr, arr+SIZE, 0);
         shuffle(arr, arr+SIZE, gen);
         for(int i = 0; i<SIZE && Space > 0; ++i)
             if(weights[arr[i]] <= Space){
                 Space -= weights[arr[i]];
-                energy += costs[arr[i]];
+                energy += values[arr[i]];
                 Knapsack.set(i);
             }
 
@@ -30,11 +29,11 @@ private:
 
     }
 
-    void Energy(int Space, int *costs, int *weights){
+    void Energy(int Space, int *values, int *weights){
         for(int i = 0; i<SIZE && Space > 0; ++i)
             if(Knapsack.test(i)){
                 Space -= weights[i];
-                energy += costs[i];
+                energy += values[i];
             }
 
         energy *= (Space >= 0);
@@ -44,8 +43,8 @@ private:
     void Perturb(){
         vector<int> on, off;
         for(int i = 0; i<SIZE; ++i) (Knapsack.test(i)? on.push_back(i) : off.push_back(i));
-        if(on.size()) Knapsack.reset(on[dist(gen)%on.size()]);
-        Knapsack.set(off[dist(gen)%(int)off.size()]);
+        if(on.size()) Knapsack.flip(on[dist(gen)%on.size()]);
+        if(off.size()) Knapsack.set(off[dist(gen)%off.size()]);
         
     }
 
@@ -53,17 +52,17 @@ public:
 
     double energy = 0;
 
-    Entity(int SIZE, int *weights, int *costs, int Space){
+    Entity(int SIZE, int *weights, int *values, int Space){
         this->SIZE = SIZE;
         this->Space = Space;
-        seed(Space, costs, weights);
+        seed(Space, values, weights);
     }
 
-    Entity(int *costs, int *weights, Entity * curr) : dist(0, MAX){
-        this->SIZE = curr->SIZE;
-        this->Knapsack = curr->Knapsack;
+    Entity(int *values, int *weights, Entity &curr) : dist(0, MAX){
+        this->SIZE = curr.SIZE;
+        this->Knapsack = curr.Knapsack;
         Perturb();
-        Energy(curr->Space, costs, weights);
+        Energy(curr.Space, values, weights);
     }
 
     void showSolution(){
