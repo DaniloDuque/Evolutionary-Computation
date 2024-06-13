@@ -1,40 +1,37 @@
 #include "Entity.h"
 
-#define cool_rate 0.999
-#define T_max 100.0
+#define cool_rate 0.9999
+#define T_max 1000.0
 #define T_min 1.0
 
 
 int SIZE, weights[MAX], values[MAX], Space;
-random_device rd;
-mt19937 gen;
-uniform_real_distribution<double> randF(0, 1);
 
 
-bool accept(double T, double delta){
-    return delta < 0 || randF(gen) < exp(-delta/T);
+double randP(){
+    return (double)rand() / RAND_MAX;
 }
 
+bool accept(double T, double delta){
+    return delta < 0 || randP() < exp(-delta/T);
+}
 
 Entity Simulated_Annealing(){
 
-    double T = T_max;
     Entity curr = Entity(SIZE, weights, values, Space);
-    while(T > T_min){
+    for(double T = T_max;T > T_min; T *= cool_rate){
         Entity New = Entity(values, weights, curr);
         if(accept(T, curr.energy - New.energy)) curr = New;
-        T *= cool_rate;
 
     }return curr;
 
 }
 
-
 int main(){
 
     scanf("%d %d", &SIZE, &Space);
     for(int i = 0; i<SIZE; ++i) scanf("%d %d", &weights[i], &values[i]);
-    Simulated_Annealing().showSolution();
+    Simulated_Annealing().showSolution(values, weights);
     return 0; 
 
 }
