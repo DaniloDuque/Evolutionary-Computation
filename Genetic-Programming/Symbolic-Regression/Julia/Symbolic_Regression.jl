@@ -5,10 +5,11 @@ include("mutation.jl")
 
 const update_channel = Channel{Tree}(1)
 
+
 function generate_data(fun::Tree)
     n = 7
-    x = LinRange(2, 10, n)
-    y = LinRange(-5, 10, n)
+    x = LinRange(0, 19, n)
+    y = LinRange(0, 19, n)
     z = [real(evaluate(fun, xi, yi)) for xi in x, yi in y]
     X = repeat(x, 1, n)
     Y = repeat(y', n, 1)
@@ -22,10 +23,10 @@ function plot_updater()
     ax = Axis3(fig[1, 1])
     display(fig)
     surface_plot = nothing
+    scatter_plot = scatter!(ax, [p[1] for p in entry], [p[2] for p in entry], [p[3] for p in entry], color=:purple, markersize=10)
     while true
         fun = take!(update_channel)
         X, Y, Z = generate_data(fun)
-        zlims!(ax, minimum(Z) - 1, maximum(Z) + 1)
         if surface_plot == nothing
             surface_plot = surface!(ax, X, Y, Z)
         else
@@ -33,6 +34,10 @@ function plot_updater()
             surface_plot[2] = Y
             surface_plot[3] = Z
         end
+        # Actualizar puntos del scatter plot
+        scatter_plot[1] = [p[1] for p in entry]
+        scatter_plot[2] = [p[2] for p in entry]
+        scatter_plot[3] = [p[3] for p in entry]
         sleep(7.5)
     end
 end
@@ -54,7 +59,7 @@ function Symbolic_Regression()
     P::Vector{Tuple} = make_gen()
     i::Int = 0
     while(true)
-        if(i % 300 == 0 && P[1][1] != Inf && P[1][1] != NaN)
+        if(i % 300 == 0 && P[1][1] != Inf)
             println(P[1])
             update_data!(P[1][2])
         end
@@ -65,3 +70,4 @@ function Symbolic_Regression()
 end
 
 Symbolic_Regression()
+

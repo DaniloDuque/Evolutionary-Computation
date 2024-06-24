@@ -61,8 +61,6 @@ end
 
 #--------------------------------------------------------------------------------------------
 
-@inline constant(x) = isa(x, Number) && !isa(x, Symbolics.Num)
-
 function prune(node::Union{Tree, Num, Number}, d::Int)
     if(!(node isa Tree)) return node end
     if(d == maxDepth) return choose_consvar() end
