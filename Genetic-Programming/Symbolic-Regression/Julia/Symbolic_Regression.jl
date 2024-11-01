@@ -34,7 +34,6 @@ function plot_updater()
             surface_plot[2] = Y
             surface_plot[3] = Z
         end
-        # Actualizar puntos del scatter plot
         scatter_plot[1] = [p[1] for p in entry]
         scatter_plot[2] = [p[2] for p in entry]
         scatter_plot[3] = [p[3] for p in entry]
